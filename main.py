@@ -1,16 +1,36 @@
-# This is a sample Python script.
+import PyPDF2
+import pyttsx3
+import tkinter as tk
+from tkinter import filedialog
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+root = tk.Tk()
+root.withdraw()
 
+FILEOPENOPTIONS = dict(defaultextension=".pdf", filetypes=[('pdf file', '*.pdf')])
+# file_path = filedialog.askopenfilename(FILEOPENOPTIONS)
+path = filedialog.askopenfilename(**FILEOPENOPTIONS)
+# path of the PDF file
+# path = open('file.pdf', 'rb')
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# creating a PdfFileReader object
+pdfReader = PyPDF2.PdfReader(path)
 
+# the page with which you want to start
+# from_page = pdfReader.pages[]
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# Instead will make it read out the full pdf. in the future can make it so user can select what page to what page
+# # print(pdfReader.numPages)       #deprecated
+# print(len(pdfReader.pages))
+text = ""
+for i in range(len(pdfReader.pages)):
+    from_page = pdfReader.pages[i]
+    text += from_page.extract_text()
+    print(text)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# extracting the text from the PDF
+# text = from_page.extract_text()
+
+# reading the text
+speak = pyttsx3.init()
+speak.say(text)
+speak.runAndWait()
